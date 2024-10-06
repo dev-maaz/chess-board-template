@@ -1,11 +1,12 @@
 
+import { BoardConstructor } from "../interfaces/board.interface";
 
 export class Board {
     public columns: number;
     public rows: number;
 
-    public width: number;
-    public height: number;
+    public boardWidth: number;
+    public boardHeight: number;
 
     public squareWidth: number;
     public squareHeight: number;
@@ -25,25 +26,31 @@ export class Board {
     private ySquareOffset: number;
     private currentColor: number;
 
-    constructor(  scene: Phaser.Scene, width = 800, height = 600, columns = 8, rows = 8, xOffset = 0, yOffset = 0, color1 = 0x706677, color2 = 0xccb7ae ) {
+    constructor(  params: BoardConstructor ) {
 
-        this.scene = scene;
-        this.columns = columns;
-        this.rows = rows;
-        this.squareWidth = width / columns;
-        this.squareHeight = height / rows;
-        this.xOffset = xOffset;
-        this.yOffset = yOffset;
-        console.log(`(square-width, square-height): (${this.squareWidth},${this.squareHeight})`);
+        this.scene = params.scene;
+        this.columns = params.columns ?? 8;
+        this.rows = params.rows ?? 8;
 
-        this.color1 = color1;
-        this.color2 = color2;
+        this.boardWidth = params.boardWidth ?? 800;
+        this.boardHeight = params.boardHeight ?? 800;
 
-        this.xSquareOffset = this.squareWidth/2 + xOffset;
-        this.ySquareOffset = this.squareHeight/2 + yOffset;
-        this.currentColor = this.color1;
+        this.xOffset = params.xOffset ?? 0;
+        this.yOffset = params.yOffset ?? 0;
+
+        this.color1 = params.color1 ?? 0x706677;
+        this.color2 = params.color2 ?? 0xccb7ae;
+
+        this.squareWidth = this.boardWidth / this.columns;
+        this.squareHeight = this.boardHeight / this.rows;
 
         this.squares = []
+
+        //Private params for construction only
+        this.xSquareOffset = this.squareWidth/2 + this.xOffset;
+        this.ySquareOffset = this.squareHeight/2 + this.yOffset;
+        this.currentColor = this.color1;
+
         this.createBoard()
     }
 
@@ -60,7 +67,7 @@ export class Board {
 
                 square.on('pointerover', () => {
                     // Create a desaturated version of the original color
-                    square.setAlpha(0.8)
+                    square.setAlpha(0.7)
                 });
 
                 square.on('pointerout', () => {
@@ -73,7 +80,7 @@ export class Board {
                 this.ySquareOffset += this.squareHeight;
             }
             this.currentColor === this.color1 ? this.currentColor = this.color2 : this.currentColor = this.color1;
-            this.ySquareOffset = this.squareHeight/2;
+            this.ySquareOffset = this.squareHeight/2 + this.yOffset;
             this.xSquareOffset += this.squareWidth;
         }
     }

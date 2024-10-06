@@ -6,16 +6,22 @@ export class BoardScene extends Phaser.Scene {
         super({ key:'BoardScene' });
     }
 
-    preload(){
+    preload(): void{
 
     }
 
-    create(){
-        this.board = new Board(this, 600, 600, 8, 8, 100);
+    create(): void{
+        this.board = new Board({
+            scene: this,
+            boardWidth: 600,
+            boardHeight: 600,
+            xOffset: 100,
+            yOffset: 100
+        });
         
     }
 
-    update(){
+    update(): void{
 
     }
 }
